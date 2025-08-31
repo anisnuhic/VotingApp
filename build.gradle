@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.gretty' version '4.0.3'
+}
+
+group = 'com.youtube.voting'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Jakarta Servlet API (za Tomcat 10+)
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    
+    // Jakarta JSP API
+    providedCompile 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.0.0'
+    
+    // MySQL Connector
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    
+    // JSTL za Jakarta (Tomcat 10+)
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
+    
+    // JSON processing
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.google.code.gson:gson:2.10.1'
+        
+    // File upload support
+    implementation 'commons-fileupload:commons-fileupload:1.5'
+    implementation 'commons-io:commons-io:2.11.0'
+    
+    // Password hashing
+    implementation 'org.mindrot:jbcrypt:0.4'
+        
+    // Jakarta EE API
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    
+    // JSTL za JSP tagove
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
+    
+    // Test dependencies
+    testImplementation 'junit:junit:4.13.2'
+
+    // Faker za generator
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+}
+
+// Gretty konfiguracija za Tomcat
+gretty {
+    httpPort = 8080
+    contextPath = '/youtube-voting'
+    servletContainer = 'tomcat10'
+}
+
+war {
+    archiveFileName = 'youtube-voting.war'
+}
+
+task runGenerator(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.youtube.voting.generator.VideoGenerator'
+    standardInput = System.in
+}
